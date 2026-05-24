@@ -24,9 +24,11 @@ Wszystkie kroki należy wykonać w terminalu systemowym systemu operacyjnego Chr
  
     przykładowy kod z pliku test.c:
 
+        //Przykladowy test tranlatora
         int licznik = 10;
         printf("Wartosc licznika to %d", licznik);
-        for(int i=0; i<5; i++) {}
+        for(int i=0; i<licznik;i++){}
+
 
         
     Zapisz plik i wyjdź z edytora.
