@@ -1,59 +1,71 @@
-# Translator kodu źródłowego z języka C do skryptu powłoki (sh)
+# Source Code Transpiler from C to Shell Script (POSIX sh)
 
-## Opis projektu
-Projekt realizuje zadanie transpilacji (tłumaczenia źródło-do-źródła) prostych programów napisanych w języku C do skryptów powłoki zgodnych ze standardem POSIX sh. Program został w całości napisany w języku powłoki sh i opiera się na przetwarzaniu potokowym oraz operacjach na plikach tekstowych. Narzędzie automatycznie analizuje strukturę wejściową, mapuje konstrukcje składniowe C na ich odpowiedniki systemowe oraz prowadzi pełną diagnostykę błędów dla sekwencji nieobsługiwanych.
+## Project Description
+This project implements a source-to-source compiler (transpiler) that translates simple C programs into shell scripts compliant with the POSIX sh standard. The tool is written entirely in the sh shell language and relies on pipeline processing and text file operations. It automatically analyzes the input structure, maps C syntactic constructs to their system equivalents, and provides full error diagnostics for unhandled sequences.
 
-## Funkcjonalności projektu
-* Preprocesor tekstu: Automatyczne oczyszczanie kodu źródłowego z komentarzy jednoliniowych (//) oraz usuwanie nadmiarowych pustych linii.
-* Translacja deklaracji zmiennych: Konwersja statycznych deklaracji języka C (np. int x = 5;) na dynamiczne przypisania powłoki (x=5) z zachowaniem restrykcyjnych reguł dotyczących spacji wokół operatora przypisania.
-* Zaawansowana konwersja funkcji printf: Wyciąganie nazw zmiennych oraz tekstu formatującego za pomocą grup przechwytujących w narzędziu sed, a następnie mapowanie maski %d na natywne odczytywanie wartości zmiennej ($nazwa) w poleceniu echo.
-* Autonomiczny moduł diagnostyczny: Wykrywanie konstrukcji wykraczających poza zdefiniowany zakres projektu (np. pętli, instrukcji warunkowych) i zapisywanie ich do zewnętrznego rejestru błędów wraz z pominięciem w pliku wynikowym.
-* Generowanie wykonywalnych skryptów systemowych: Plik wyjściowy automatycznie otrzymuje nagłówek środowiskowy #!/bin/sh, co pozwala na jego bezpośrednie uruchomienie w systemie po nadaniu uprawnień.
+## Features
+* **Text Preprocessor:** Automatically cleans the source code by removing single-line comments (`//`) and redundant blank lines.
+* **Variable Declaration Translation:** Converts static C declarations (e.g., `int x = 5;`) into dynamic shell assignments (`x=5`) while maintaining strict spacing rules around the assignment operator.
+* **Advanced `printf` Conversion:** Extracts variable names and formatting strings using capturing groups in `sed`, mapping the `%d` mask to native shell variable evaluation (`$variable`) within the `echo` command.
+* **Autonomous Diagnostic Module:** Detects syntax outside the defined project scope (e.g., loops, conditional statements), skips them in the output file, and logs them to an external error registry (`diagnostics.txt`).
+* **Executable System Script Generation:** The output file automatically receives the `#!/bin/sh` environment header, allowing it to run directly in the system after permissions are granted.
 
-## Czego się nauczyłem podczas realizacji projektu
-* Strumieniowego przetwarzania tekstu: Praktyczne opanowanie potoków (pipe) oraz narzędzi grep i sed do filtrowania i modyfikacji danych w locie.
-* Wyrażeń regularnych (Regex): Wykorzystanie zaawansowanych mechanizmów, takich jak klasy znaków standardu POSIX ([[:space:]]) oraz grup przechwytujących do izolowania fragmentów tekstu.
+## What I Learned
+* **Stream Text Processing:** Practical mastery of pipelines (`|`), `grep`, and `sed` for filtering and modifying data on the fly.
+* **Regular Expressions (Regex):** Utilizing advanced mechanisms such as POSIX character classes (`[[:space:]]`) and capturing groups to isolate specific text fragments.
 
-## Instrukcja uruchomienia krok po kroku
+## Step-by-Step Execution Guide
 
-Wszystkie kroki należy wykonać w terminalu systemowym systemu operacyjnego ChromeOS/Linux.
+All steps should be executed in a Linux / ChromeOS terminal.
 
-1. Edytuj plik wejściowy z kodem C o nazwie `test.c` przy użyciu edytora tekstowego:
+1. Edit the input C code file named `test.c` using a text editor:
 
-         nano test.c
- 
-    przykładowy kod z pliku test.c:
+   ```bash
+   nano test.c
+   ```
 
-        //Przykladowy test tranlatora
-        int licznik = 10;
-        printf("Wartosc licznika to %d", licznik);
-        for(int i=0; i<licznik;i++){}
+   *Example code for `test.c`:*
 
+   ```c
+   // Example translator test
+   int counter = 10;
+   printf("Counter value is %d", counter);
+   for(int i=0; i<counter;i++){}
+   ```
 
-        
-    Zapisz plik i wyjdź z edytora.
+   Save the file and exit the editor.
 
-2. Nadaj uprawnienia wykonywalności dla głównego skryptu translatora:
-    
-        chmod +x translator.sh
+2. Grant execution permissions to the main translator script:
 
-3. Uruchom proces translacji kodu:
-   
-        ./translator.sh
+   ```bash
+   chmod +x translator.sh
+   ```
 
-4. Zweryfikuj wygenerowane pliki:
+3. Run the translation process:
 
-   * Aby zobaczyć przetłumaczony kod sh:
-        
-            cat program.sh
-   * Aby zobaczyć linie, które nie zostały obsłużone (np. pętla for):
-    
-            cat diagnostyka.txt
+   ```bash
+   ./translator.sh
+   ```
 
-5. Nadaj uprawnienia wykonywalności dla nowo powstałego skryptu:
-   
-        chmod +x program.sh
+4. Verify the generated files:
 
-6. Uruchom przetłumaczony program, aby zobaczyć wynik jego działania:
-   
-        ./program.sh
+   * To see the translated sh code:
+     ```bash
+     cat program.sh
+     ```
+   * To check unhandled lines (e.g., the for loop):
+     ```bash
+     cat diagnostics.txt
+     ```
+
+5. Grant execution permissions to the newly created script:
+
+   ```bash
+   chmod +x program.sh
+   ```
+
+6. Run the translated program to see the output:
+
+   ```bash
+   ./program.sh
+   ```
